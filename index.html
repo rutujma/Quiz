@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Quiz with Feedback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .option {
+            margin: 8px 0;
+        }
+
+        .option label {
+            cursor: pointer;
+        }
+
+        button {
+            background: #4285f4;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #357ae8;
+        }
+
+        .result {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="quiz"></div>
+        <button id="checkBtn">Check Answer</button>
+        <button id="nextBtn">Next Question</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "Tadoba national park is in _________.", a: "Gujarat", b: "Maharashtra", c: "M.P", d: "U.P", correct: "b" },
+            { question: "_______called the ‘lungs of the planet’.", a: "Sahyadry rain forest", b: "Konkan rain forest", c: "Amazon rain forest", d: "South Africa rain forest", correct: "c" },
+            { question: "Species with very limited distribution over a relatively small locality is called", a: "Niche", b: "Biome", c: "Endemism", d: "Ecosphere", correct: "c" },
+            { question: "Environmental friendly products are given ISO certification called ISO_________", a: "12000", b: "13000", c: "14000", d: "15000", correct: "c" },
+            { question: "World Environment Day falls on ____", a: "June 5", b: "February 28", c: "October 4", d: "April 22", correct: "a" },
+            { question: "World Environment Day falls on ____", a: "June 5", b: "February 28", c: "October 4", d: "April 22", correct: "a" },
+
+{ question: "Forests are the part of _____________ ecosystem", a: "Tropical", b: "Terrestrial", c: "Marine", d: "None of these", correct: "b" },
+
+{ question: "Chlorinated compounds such as chlorofluorocarbons (CFC) contribute to global warming are used in:", a: "Refrigerator and air conditioner", b: "Cooking gas", c: "Water coolers", d: "Iron", correct: "a" },
+
+{ question: "Driving force in an ecosystem is", a: "Plants", b: "Producers", c: "Solar energy", d: "Biomass", correct: "c" },
+
+{ question: "The global action plan adopted at earth summit at 1992 was on", a: "Agenda 20", b: "Agenda 50", c: "Agenda 21", d: "Agenda 62", correct: "c" },
+
+{ question: "Abiotic environment does not include", a: "Air", b: "Water", c: "Soil", d: "Plants", correct: "d" },
+
+{ question: "The ecological factors related to soil and substratum are called ____ factors", a: "Edaphic", b: "Somatic", c: "Air-borne", d: "Egis", correct: "a" },
+
+{ question: "A layer of sediment or rock that is highly permeable and contains water is called", a: "Aquifer", b: "Spring", c: "Glacier", d: "Seepage", correct: "a" },
+
+{ question: "Scale to measure intensity of earthquake is __________", a: "Richter scale", b: "Vector", c: "Scalar", d: "dB", correct: "a" },
+
+{ question: "Chipko movement was started to conserve", a: "River", b: "Trees", c: "Land", d: "Gas", correct: "b" },
+
+{ question: "River and streams are examples of", a: "Lentic", b: "Lotic", c: "Wetland", d: "Marine", correct: "b" },
+
+{ question: "Igneous, metamorphic and sedimentary rocks are part of", a: "Hydrosphere", b: "Atmosphere", c: "Lithosphere", d: "Stratosphere", correct: "c" },
+
+{ question: "Bacteria and fungus are examples of", a: "Autotrophes", b: "Heterotrophs", c: "Saptrotrophs", d: "Producers", correct: "c" },
+
+{ question: "In energy pyramid which Trophic level contains maximum energy", a: "T1", b: "T2", c: "T3", d: "T4", correct: "a" },
+
+{ question: "For sustainable Life style ______ R are followed", a: "2R", b: "3R", c: "5R", d: "None of these", correct: "c" },
+
+{ question: "The killer in Bhopal Disaster was", a: "Methyl isocynate", b: "CO2", c: "H2O", d: "None", correct: "a" },
+
+{ question: "What is the negative effect of excessive use of fertilizers and pesticides on the soil?", a: "Pollutes the soil", b: "Affects the soil fertility", c: "Reduces crop yield", d: "All of the above", correct: "d" },
+
+{ question: "In which food chain begins with decomposers like algae, bacteria fungus etc", a: "Grazing food chain", b: "Detritus food chain", c: "Both option a and b", d: "None of the above", correct: "b" },
+
+{ question: "Who is the father of green revolution in india", a: "Madhav gadgil", b: "MC Mehta", c: "Salim ali", d: "MS swaminathan", correct: "d" },
+
+{ question: "Accumulation of a chemicals by an organism from water and food exposure is called", a: "Pollution", b: "Biomagnification", c: "Ozone layer depletion", d: "None of the above", correct: "b" },
+
+{ question: "What is a carbon footprint?", a: "The total amount of carbon dioxide emitted by an individual, organization, or product", b: "The number of trees needed to absorb carbon dioxide", c: "The carbon content of soil in a particular area", d: "The amount of carbon found in fossil fuels", correct: "a" },
+
+{ question: "Transfer of food energy from producers through a series of organisms with repeated eating is called", a: "Food chain", b: "Ecosystem", c: "Biodiversity", d: "None of the above", correct: "a" },
+
+{ question: "Biosphere is made up of", a: "Atmosphere and lithosphere", b: "Hydrosphere and atmosphere", c: "Lithosphere and hydrosphere", d: "Lithosphere, hydrosphere and atmosphere", correct: "d" },
+
+{ question: "The segment/segments of environment responsible for conservation of radiant energy to chemical energy (carbohydrate) through photosynthesis is/are", a: "Hydrosphere", b: "Lithosphere", c: "Atmosphere and lithosphere", d: "Biosphere", correct: "d" },
+
+{ question: "The largest sink of the planet is", a: "Hydrosphere", b: "Lithosphere", c: "Atmosphere and lithosphere", d: "Biosphere", correct: "a" },
+
+{ question: "The resources which can be used again and again after passing through some processes are known as____", a: "Renewable resources", b: "Non-renewable resources", c: "Cyclic resources", d: "All of the above", correct: "c" },
+
+{ question: "Which of the following is not an ideal solution for tackling the water crisis?", a: "Drilling large number of deep bore wells", b: "Population growth control", c: "Water conservation in irrigation", d: "Water pollution control", correct: "a" },
+
+{ question: "Which of the following is a disadvantage for most of the renewable energy sources", a: "Highly polluting", b: "High waste disposal cost", c: "Unreliable supply", d: "High running cost", correct: "c" },
+
+{ question: "The part of earth and its atmosphere in which organisms live is", a: "Biosphere", b: "Lithosphere", c: "Biomass", d: "Biota", correct: "a" },
+
+{ question: "The word ‘Environment’ has been derived from the French word ,________________", a: "Environ", b: "Okies", c: "Yeo", d: "Aqua", correct: "a" },
+
+{ question: "The earth environment is broadly divided into ____________regions", a: "Five", b: "Six", c: "Two", d: "Four", correct: "d" },
+
+{ question: "The percentage of earth’s surface covered with water is", a: "0.5", b: "0.7", c: "0.4", d: "0.6", correct: "b" },
+
+{ question: "The lowest portion of atmosphere is called", a: "Troposphere", b: "Stratosphere", c: "Mesosphere", d: "Exosphere", correct: "a" },
+
+{ question: "The most nuclear fuel used in the world is________________", a: "Thorium – 232", b: "Uranium – 238", c: "Uranium – 235", d: "Plutonium – 239", correct: "c" },
+
+{ question: "The lithosphere has a thickness from", a: "64 to 96Km", b: "80 to 100Km", c: "20 to 45 Km", d: "None", correct: "d" },
+
+{ question: "Renewable energy do not contribute to", a: "Global warming", b: "Deforestation", c: "Nuclear Waste", d: "None", correct: "a" },
+
+{ question: "Van Mahotsav is an annual tree-planting festival in India, is celebrated on", a: "5th June", b: "1st December", c: "1st July", d: "22nd September", correct: "c" },
+
+{ question: "When do greenhouse gases cause global warming?", a: "When their concentration is enhanced", b: "When their concentration is decreased", c: "When there are no greenhouse gases", d: "When greenhouse gas released in balance way", correct: "a" },
+
+{ question: "Out of following which movement was carried out for conservation of forest and environment", a: "Forest Movement", b: "Tehri andolan", c: "Ganga action plan", d: "Chipko andolan", correct: "d" },
+
+{ question: "This keeps us “not too hot in the summer” and “not too cold in the winter.” Scientists call this the", a: "Greenhouse effect", b: "Seasonal effect", c: "Lake effect", d: "Ocean effect", correct: "a" },
+
+{ question: "In 2018 the total world energy came from ___% fossil fuels", a: "0.6", b: "0.64", c: "0.7", d: "0.74", correct: "d" },
+
+{ question: "About _____% of the earth’s water is strong saline.", a: "0.7", b: "0.97", c: "0.85", d: "0.65", correct: "b" },
+
+{ question: "Which of the following ecosystems is most productive in terms of net primary production?", a: "Deserts", b: "Tropical rain forests", c: "Oceans", d: "Estuaries", correct: "b" },
+
+{ question: "Why do all food chain starts with producers", a: "They make their own food", b: "They are nutritious", c: "They do not require energy", d: "They require sunlight", correct: "a" },
+
+{ question: "The protocol that reduces greenhouse gas emissions is", a: "Kyoto Protocol", b: "Cartagena Protocol", c: "Montreal Protocol", d: "Vienna Protocol", correct: "a" },
+
+{ question: "The Jim Korbett national park is located at", a: "Chattisgarh", b: "Uttar Pradesh", c: "Uttarakhand", d: "Jharkhand", correct: "c" },
+
+{ question: "How much percent of energy is absorbs from the Sun to Earth?", a: "0.25", b: "0.75", c: "0.8", d: "1.0", correct: "b" },
+
+{ question: "Which is the most abundantly found greenhouse gas in atmosphere without human intervention?", a: "Carbon dioxide", b: "Water vapor", c: "Methane", d: "Nitrous oxide", correct: "b" },
+
+{ question: "Which of the following is not a greenhouse gas?", a: "Carbon dioxide", b: "Water vapor", c: "Methane", d: "Ethane", correct: "d" },
+
+{ question: "Who is the founder of narmada bachao andolan", a: "Mc Mehta", b: "MS swaminathan", c: "Medha patkar", d: "Sunderlal bahuguna", correct: "c" },
+
+{ question: "The international protocol to protect the ozone layer is", a: "Kyoto Protocol", b: "Cartagena Protocol", c: "Montreal Protocol", d: "Vienna Protocol", correct: "c" },
+
+{ question: "Earth summit was held in", a: "Rio de janerio 1992", b: "Stockholm 1972", c: "Vienna 1985", d: "Montreal 1987", correct: "a" },
+
+{ question: "World summit on sustainable development was held at", a: "Rio de janerio 1992", b: "Stockholm 1972", c: "Vienna 1985", d: "Johannesburg in 2002", correct: "d" },
+
+{ question: "The world’s worst nuclear accident occurred at Chernobly on:", a: "26 April 1986", b: "15 April 1986", c: "9 August 1986", d: "6 August 1987", correct: "a" },
+
+{ question: "What is the pH level of ‘acid rain’?", a: "7.0", b: "6.0", c: "4.0", d: "3.0", correct: "c" },
+
+{ question: "The interdependence of living organisms among themselves & environment is", a: "Eco system", b: "Ecology", c: "Biology", d: "Biosphere", correct: "a" },
+
+{ question: "Which of the following gases are main contributors to acid rain?", a: "Carbon dioxide and carbon monoxide", b: "Sulphur dioxide and carbon monoxide", c: "Carbon dioxide and Sulphur dioxide", d: "Sulphur dioxide and nitrous dioxide", correct: "d" },
+
+{ question: "Who discovered the phenomenon of acid rain?", a: "George Brown", b: "George Brown-2", c: "Robert Angus Smith", d: "Charles David", correct: "c" },
+
+{ question: "What is the pH required for the survival of aquatic animals and plants?", a: "4.8", b: "5.2", c: "7.8", d: "8.0", correct: "c" },
+
+{ question: "The Jakarta Mandate (1995) is associated with which major environmental concern?", a: "Marine and coastal biodiversity", b: "Organic carbon", c: "Brown carbon", d: "All of above", correct: "a" },
+
+{ question: "What are the key components needed for successful composting?", a: "Carbon, nitrogen, oxygen, and moisture", b: "Coal, oil", c: "Diesel", d: "All of above", correct: "a" },
+
+{ question: "Acid rain can come in which form?", a: "Wet", b: "Dry", c: "Wet and dry", d: "Only wet", correct: "c" },
+
+{ question: "The most important agents for ozone depletion are", a: "Methane", b: "CFCs", c: "Nuclear fallout", d: "Nitrous oxide", correct: "b" },
+
+{ question: "Soil fertility is reduced by", a: "Crop rotation", b: "Nitrogen fixing bacteria", c: "Intensive agriculture", d: "Reduction in organic matter", correct: "c" },
+
+{ question: "Indus water dispute is in between", a: "India and Pakistan", b: "Punjab and Haryana", c: "Uttar Pradesh and Madhya Pradesh", d: "Karnataka and Tamil Nadu", correct: "a" },
+
+{ question: "Ammonification is formation of", a: "Ammonia from nitrates by decomposers", b: "Ammonia from nitrogen", c: "Ammonia from amino acids", d: "Ammonia from nitrates by nitrogen fixers", correct: "c" },
+
+{ question: "Ozone layer is present in", a: "Troposphere", b: "Exosphere", c: "Stratosphere", d: "Mesosphere", correct: "c" },
+
+{ question: "Coal, petroleum and natural gas are called as", a: "Fossil fuels", b: "Renewable fuels", c: "Artificial fuels", d: "None of the above", correct: "a" },
+
+{ question: "Crust, mantle and core are part of", a: "Atmosphere", b: "Hydrosphere", c: "Lithosphere", d: "Biosphere", correct: "c" },
+
+{ question: "Hottest layer of the Earth in which sphere?", a: "Mesosphere", b: "Stratosphere", c: "Thermosphere", d: "Troposphere", correct: "c" },
+
+{ question: "Who pioneered the chipko movement", a: "Mc Mehta", b: "MS swaminathan", c: "Medha patkar", d: "Sunderlal bahuguna", correct: "d" },
+
+{ question: "Black painted panels which are hanged at roofs to trap heat and energy from sun are", a: "Solar cell", b: "Solar heater", c: "Solar furnace", d: "Solar battery", correct: "b" },
+
+{ question: "What is the main problem in using hydrogen as fuel for vehicles?", a: "Capital intensive", b: "Storage", c: "Fuel cell technology is not well established", d: "Cars will become heavy", correct:"b"},
+
+            { question: "The lower portion of atmosphere is", a: "Troposphere", b: "Stratosphere", c: "Mesosphere", d: "Exosphere", correct: "a" },
+
+{ question: "Worlds largest reserve of natural gas is in", a: "India", b: "Russia", c: "US", d: "China", correct: "b" },
+
+{ question: "Solar flares consists of", a: "Visible light, ultraviolet light", b: "Infrared, radio waves", c: "X-rays, and gamma rays", d: "All of the above", correct: "d" },
+
+{ question: "Which of the following is the main source of synthetic fuel", a: "Plastic", b: "Biomass", c: "Coal", d: "Paper", correct: "c" },
+
+{ question: "The Fukushima Daiichi nuclear disaster occurred in", a: "11 March 2011", b: "10 June 2002", c: "23rd August 1998", d: "25th December 2004", correct: "a" },
+
+{ question: "Who is famous for long drawn battles to protect the Taj Mahal and clean up the ganges river", a: "Mc Mehta", b: "MS swaminathan", c: "Medha patkar", d: "Sunderlal bahuguna", correct: "a" },
+
+{ question: "How are humans making greenhouse gases of our own?", a: "Burning fossil fuels in our cars", b: "Burning forests", c: "With large-scale agriculture", d: "All of these", correct: "d" },
+
+{ question: "Too many greenhouse gasses in the atmosphere may block heat from escaping into space and trap too much heat next to the Earth’s surface causing:", a: "Another ice age", b: "Global warming", c: "Earthquakes", d: "Volcanic eruptions", correct: "b" },
+
+{ question: "Something that might happen because of global warming is:", a: "Melting polar ice caps", b: "More reflected sunlight off the ice pack", c: "Lower sea levels", d: "A sale on bathing suits", correct: "a" },
+
+{ question: "The ability to exist and develop without depleting natural resources for the future is known as", a: "Sustainability", b: "Equitability", c: "Accountability", d: "Controllability", correct: "a" },
+
+{ question: "Environmental studies involve", a: "Biology & zoology", b: "Physics & chemistry", c: "Anthropology and economics", d: "All of the above", correct: "d" },
+
+{ question: "Ozone layer protects us from", a: "Sunlight", b: "Infrared light", c: "UV light", d: "Visible light", correct: "c" },
+
+{ question: "Effects of Deforestation are", a: "Soil erosion", b: "Loss of Biodiversity", c: "Disruption of water cycle", d: "All of the above", correct: "d" },
+
+{ question: "The presence of substance in the environment which has harmful or poisonous effect is called", a: "Industrialization", b: "Pollution", c: "Globalization", d: "Rehabilitation", correct: "b" },
+
+{ question: "Bharati vidyapeeth institute of environment education and research is at", a: "Mumbai", b: "Calcutta", c: "Chennai", d: "Pune", correct: "d" },
+
+{ question: "The first of the major environmental protection act to be promulgated in India was", a: "Water Act", b: "Air Act", c: "Environmental Act", d: "Noise Pollutant Act", correct: "a" },
+
+{ question: "The main source of energy in ecosystem is", a: "Atmosphere", b: "Sun", c: "Water", d: "Air", correct: "b" },
+
+{ question: "What do you call the processing of used materials and their reuse?", a: "Reduce", b: "Reuse", c: "Recycle", d: "Recover", correct: "c" },
+
+{ question: "NEERI is situated at", a: "Mumbai", b: "Dehradun", c: "Nagpur", d: "Delhi", correct: "c" },
+
+{ question: "In a terrestrial ecosystem, the trophic level that would contain the largest biomass would be", a: "Producers", b: "Consumers", c: "Herbivores", d: "None", correct: "a" },
+
+{ question: "Who is the father of green revolution in india", a: "Madhav gadgil", b: "MC Mehta", c: "Salim ali", d: "MS swaminathan", correct: "d" },
+
+{ question: "How much energy is transferred from one trophic level to the next in a food chain", a: "0.01", b: "0.1", c: "0.2", d: "0.001", correct: "b" },
+
+{ question: "USCB is short form for", a: "United state census bureau", b: "United states community bureau", c: "None", d: "United society for communist and beaurocrates", correct: "a" },
+
+{ question: "The objectives of wildlife (Protection) Act 1972 is", a: "The preserve the biodiversity", b: "To maintain essential ecological and life support system", c: "Protection and conservation of wildlife", d: "All of the above", correct: "d" },
+
+{ question: "The wild Life (Protection) Act was enacted in the year :", a: "1986", b: "1954", c: "1984", d: "1972", correct: "d" },
+
+{ question: "Which of the following is not the Greenhouse gas?", a: "Chlorofluorocarbons", b: "Methane", c: "CO2", d: "SO2", correct: "d" },
+
+{ question: "Normal average thickness of stratospheric ozone layer is", a: "200DU", b: "300DU", c: "400DU", d: "500DU", correct: "b" },
+
+{ question: "The world’s worst nuclear accident occurred at Chernobly on:", a: "26 April 1986", b: "15 April 1986", c: "9 August 1986", d: "6 August 1987", correct: "a" },
+
+
+
+
+            // Add remaining 15 questions here in the same format
+        ];
+
+       // Function to shuffle the quizData array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Shuffle the quizData array
+        shuffleArray(quizData);
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const quizContainer = document.getElementById("quiz");
+        const checkBtn = document.getElementById("checkBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const resultDiv = document.getElementById("result");
+
+        function loadQuiz() {
+            answered = false;
+            resultDiv.innerHTML = "";
+            const currentQuizData = quizData[currentQuestion];
+            quizContainer.innerHTML = `
+                <div class="question">${currentQuizData.question}</div>
+                <div class="option"><input type="radio" id="a" name="answer" value="a"><label for="a">${currentQuizData.a}</label></div>
+                <div class="option"><input type="radio" id="b" name="answer" value="b"><label for="b">${currentQuizData.b}</label></div>
+                <div class="option"><input type="radio" id="c" name="answer" value="c"><label for="c">${currentQuizData.c}</label></div>
+                <div class="option"><input type="radio" id="d" name="answer" value="d"><label for="d">${currentQuizData.d}</label></div>
+            `;
+        }
+
+        function getSelected() {
+            const answers = document.getElementsByName("answer");
+            let answer = undefined;
+            answers.forEach(answerEl => {
+                if (answerEl.checked) {
+                    answer = answerEl.value;
+                }
+            });
+            return answer;
+        }
+
+        function checkAnswer() {
+            if (answered) return;
+            const answer = getSelected();
+            if (!answer) {
+                alert("Please select an answer!");
+                return;
+            }
+            answered = true;
+            const currentQuizData = quizData[currentQuestion];
+            if (answer === currentQuizData.correct) {
+                score++;
+                resultDiv.innerHTML = "Correct!";
+            } else {
+                resultDiv.innerHTML = `Wrong! The correct answer is "${currentQuizData.correct}".`;
+            }
+        }
+
+        nextBtn.addEventListener("click", () => {
+            if (!answered) {
+                alert("Please check your answer before moving on!");
+                return;
+            }
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuiz();
+            } else {
+                quizContainer.innerHTML = "";
+                checkBtn.style.display = "none";
+                nextBtn.style.display = "none";
+                resultDiv.innerHTML = `Quiz Over! You answered correctly ${score}/${quizData.length} questions.`;
+            }
+        });
+
+        checkBtn.addEventListener("click", checkAnswer);
+        loadQuiz();
+    </script>
+</body>
+
+</html>
